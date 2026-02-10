@@ -11,11 +11,18 @@ import (
 func main() {
 	queue := pipeline.NewEventQueue(100)
 
-	worker := &pipeline.Worker{
-		ID:    1,
-		Queue: queue,
+	processor := &pipeline.LogginProcessor{}
+
+	workerCount := 3
+
+	for i := 1; i <= workerCount; i++ {
+		worker := &pipeline.Worker{
+			ID:        i,
+			Queue:     queue,
+			Processor: processor,
+		}
+		worker.Start()
 	}
-	worker.Start()
 
 	h := &handler.EventHandler{
 		Queue: queue,
