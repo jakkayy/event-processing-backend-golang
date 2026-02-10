@@ -23,6 +23,6 @@ func main() {
 
 	http.HandleFunc("/events", h.Handle)
 
-	log.Println("event api running")
-	http.ListenAndServe("port 8080", nil)
+	log.Println("event api running on 8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
