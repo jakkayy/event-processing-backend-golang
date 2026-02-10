@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"event-processing-backend-golang/internal/api/handler"
 	"event-processing-backend-golang/internal/pipeline"
@@ -11,7 +12,7 @@ import (
 func main() {
 	queue := pipeline.NewEventQueue(100)
 
-	aggregator := pipeline.NewAggregationProcessor()
+	windowAgg := pipeline.NewWindowAggregationProcessor(time.Minute, 5)
 
 	workerCount := 3
 
@@ -19,7 +20,7 @@ func main() {
 		worker := &pipeline.Worker{
 			ID:        i,
 			Queue:     queue,
-			Processor: aggregator,
+			Processor: windowAgg,
 		}
 		worker.Start()
 	}
@@ -29,7 +30,7 @@ func main() {
 	}
 
 	metricsHandler := &handler.MetricsHandler{
-		Aggregator: aggregator,
+		WindowAgg: windowAgg,
 	}
 
 	http.HandleFunc("/events", eventHandler.Handle)
