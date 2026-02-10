@@ -11,7 +11,7 @@ import (
 func main() {
 	queue := pipeline.NewEventQueue(100)
 
-	processor := &pipeline.LogginProcessor{}
+	aggregator := pipeline.NewAggregationProcessor()
 
 	workerCount := 3
 
@@ -19,16 +19,21 @@ func main() {
 		worker := &pipeline.Worker{
 			ID:        i,
 			Queue:     queue,
-			Processor: processor,
+			Processor: aggregator,
 		}
 		worker.Start()
 	}
 
-	h := &handler.EventHandler{
+	eventHandler := &handler.EventHandler{
 		Queue: queue,
 	}
 
-	http.HandleFunc("/events", h.Handle)
+	metricsHandler := &handler.MetricsHandler{
+		Aggregator: aggregator,
+	}
+
+	http.HandleFunc("/events", eventHandler.Handle)
+	http.HandleFunc("/metrics", metricsHandler.Handle)
 
 	log.Println("event api running on 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
