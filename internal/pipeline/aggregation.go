@@ -27,7 +27,7 @@ func (p *AggregationProcessor) Process(e domain.Event) {
 	log.Printf("[aggregate] type=%s count=%d\n", e.Type, p.counters[e.Type])
 }
 
-func (p *AggregationProcessor) snapshot() map[string]int {
+func (p *AggregationProcessor) Snapshot() map[string]int {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
