@@ -8,7 +8,7 @@ import (
 )
 
 type MetricsHandler struct {
-	WindowAgg *pipeline.AggregationProcessor
+	WindowAgg *pipeline.WindowAggregationProcessor
 }
 
 func (h *MetricsHandler) Handle(w http.ResponseWriter, r *http.Request) {
