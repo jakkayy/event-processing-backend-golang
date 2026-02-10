@@ -8,7 +8,7 @@ import (
 )
 
 type MetricsHandler struct {
-	Aggregator *pipeline.AggregationProcessor
+	WindowAgg *pipeline.AggregationProcessor
 }
 
 func (h *MetricsHandler) Handle(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,7 @@ func (h *MetricsHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	snapshot := h.Aggregator.Snapshot()
+	snapshot := h.WindowAgg.Snapshot()
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(snapshot)
