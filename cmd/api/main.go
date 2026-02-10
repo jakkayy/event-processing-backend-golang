@@ -11,6 +11,12 @@ import (
 func main() {
 	queue := pipeline.NewEventQueue(100)
 
+	worker := &pipeline.Worker{
+		ID:    1,
+		Queue: queue,
+	}
+	worker.Start()
+
 	h := &handler.EventHandler{
 		Queue: queue,
 	}
